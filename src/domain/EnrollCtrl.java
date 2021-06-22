@@ -8,12 +8,11 @@ import domain.exceptions.EnrollmentRulesViolationException;
 
 public class EnrollCtrl {
 	public void enroll(Student s, List<CSE> courses) throws EnrollmentRulesViolationException {
-        Map<Term, Map<Course, Double>> transcript = s.getTranscript();
-        checkForAlreadyPassedCourses(courses, transcript);
-        checkForPrerequisiteRequirements(courses, transcript);
+        checkForAlreadyPassedCourses(courses, s.transcript());
+        checkForPrerequisiteRequirements(courses, s.transcript());
         checkForDuplicateEnrollRequest(courses);
         checkForConfilictingExamTimes(courses);
-        checkForGPALimit(courses, transcript);
+        checkForGPALimit(courses, s.transcript());
         for (CSE o : courses)
 			s.takeCourse(o.getCourse(), o.getSection());
 	}

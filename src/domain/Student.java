@@ -21,6 +21,10 @@ public class Student {
 		return gpa;
 	}
 
+	public Map<Term, Map<Course, Double>> transcript() {
+		return getTranscript();
+	}
+
 	static class CourseSection {
         CourseSection(Course course, int section) {
             this.course = course;
