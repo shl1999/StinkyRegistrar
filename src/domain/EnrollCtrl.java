@@ -23,9 +23,8 @@ public class EnrollCtrl {
             nextPre:
             for (Course pre : prereqs) {
                 for (Map.Entry<Term, Map<Course, Double>> tr : transcript.entrySet()) {
-                    for (Map.Entry<Course, Double> r : tr.getValue().entrySet()) {
-                        if (r.getKey().equals(pre) && r.getValue() >= 10)
-                            continue nextPre;
+                    if(hasPassed(tr , pre)){
+                        continue nextPre;
                     }
                 }
                 throw new EnrollmentRulesViolationException(String.format("The student has not passed %s as a prerequisite of %s", pre.getName(), o.getCourse().getName()));
@@ -37,9 +36,8 @@ public class EnrollCtrl {
         for (CSE o : courses) {
             for (Iterator<Map.Entry<Term, Map<Course, Double>>> iterator = transcript.entrySet().iterator(); iterator.hasNext(); ) {
                 Map.Entry<Term, Map<Course, Double>> tr = iterator.next();
-                for (Map.Entry<Course, Double> r : tr.getValue().entrySet()) {
-                    if (r.getKey().equals(o.getCourse()) && r.getValue() >= 10)
-                        throw new EnrollmentRulesViolationException(String.format("The student has already passed %s", o.getCourse().getName()));
+                if(hasPassed(tr , o.getCourse())){
+                    throw new EnrollmentRulesViolationException(String.format("The student has already passed %s", o.getCourse().getName()));
                 }
             }
         }
@@ -73,5 +71,13 @@ public class EnrollCtrl {
                 (Student.getGpa(transcript) < 16 && unitsRequested > 16) ||
                 (unitsRequested > 20))
             throw new EnrollmentRulesViolationException(String.format("Number of units (%d) requested does not match GPA of %f", unitsRequested, Student.getGpa(transcript)));
+    }
+
+    public boolean hasPassed(Map.Entry<Term, Map<Course, Double>> tr , Course course){
+        for (Map.Entry<Course, Double> r : tr.getValue().entrySet()) {
+            if (r.getKey().equals(course) && r.getValue() >= 10)
+                return true;
+        }
+        return false;
     }
 }
