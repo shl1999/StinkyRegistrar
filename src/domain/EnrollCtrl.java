@@ -68,7 +68,7 @@ public class EnrollCtrl {
             for (CSE o2 : courses) {
                 if (o == o2)
                     continue;
-                if (o.getExamTime().equals(o2.getExamTime()))
+                if (o.getExamDate().equals(o2.getExamDate()))
                     errors.add(new EnrollmentRulesViolationException(String.format("Two offerings %s and %s have the same exam time", o, o2)));
             }
         }
@@ -76,10 +76,10 @@ public class EnrollCtrl {
 
     private void checkForGPALimit(List<CSE> courses, Map<Term, Map<Course, Double>> transcript) {
         int unitsRequested = courses.stream().mapToInt(o -> o.getCourse().getUnits()).sum();
-        if ((Student.getGpa(transcript) < 12 && unitsRequested > 14) ||
-                (Student.getGpa(transcript) < 16 && unitsRequested > 16) ||
+        if ((Utils.getGpa(transcript) < 12 && unitsRequested > 14) ||
+                (Utils.getGpa(transcript) < 16 && unitsRequested > 16) ||
                 (unitsRequested > 20))
-            errors.add(new EnrollmentRulesViolationException(String.format("Number of units (%d) requested does not match GPA of %f", unitsRequested, Student.getGpa(transcript))));
+            errors.add(new EnrollmentRulesViolationException(String.format("Number of units (%d) requested does not match GPA of %f", unitsRequested, Utils.getGpa(transcript))));
     }
 
     public boolean hasPassed(Map.Entry<Term, Map<Course, Double>> tr, Course course) {

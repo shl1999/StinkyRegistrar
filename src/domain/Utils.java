@@ -1,4 +1,4 @@
-package domain.exceptions;
+package domain;
 
 import domain.Course;
 import domain.Term;

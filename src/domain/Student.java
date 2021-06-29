@@ -8,34 +8,6 @@ import java.util.Map;
 public class Student {
     private String id;
     private String name;
-
-    public static double getGpa(Map<Term, Map<Course, Double>> transcript) {
-        double points = 0;
-        int totalUnits = 0;
-        for (Map.Entry<Term, Map<Course, Double>> tr : transcript.entrySet()) {
-            for (Map.Entry<Course, Double> r : tr.getValue().entrySet()) {
-                points += r.getValue() * r.getKey().getUnits();
-                totalUnits += r.getKey().getUnits();
-            }
-        }
-        double gpa = points / totalUnits;
-        return gpa;
-    }
-
-    public Map<Term, Map<Course, Double>> transcript() {
-        return getTranscript();
-    }
-
-    static class CourseSection {
-        CourseSection(Course course, int section) {
-            this.course = course;
-            this.section = section;
-        }
-
-        Course course;
-        int section;
-    }
-
     private Map<Term, Map<Course, Double>> transcript;
     private List<CourseSection> currentTerm;
 
@@ -46,18 +18,12 @@ public class Student {
         this.currentTerm = new ArrayList<>();
     }
 
-    public void takeCourse(Course c, int section) {
-        currentTerm.add(new CourseSection(c, section));
-    }
-
     public Map<Term, Map<Course, Double>> getTranscript() {
         return transcript;
     }
 
-    public void addTranscriptRecord(Course course, Term term, double grade) {
-        if (!transcript.containsKey(term))
-            transcript.put(term, new HashMap<>());
-        transcript.get(term).put(course, grade);
+    public Map<Term, Map<Course, Double>> transcript() {
+        return getTranscript();
     }
 
     public List<CourseSection> getCurrentTerm() {
@@ -70,6 +36,16 @@ public class Student {
 
     public String getName() {
         return name;
+    }
+
+    public void takeCourse(Course c, int section) {
+        currentTerm.add(new CourseSection(c, section));
+    }
+
+    public void addTranscriptRecord(Course course, Term term, double grade) {
+        if (!transcript.containsKey(term))
+            transcript.put(term, new HashMap<>());
+        transcript.get(term).put(course, grade);
     }
 
 }

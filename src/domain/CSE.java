@@ -32,7 +32,7 @@ public class CSE {
 		return course.getName() + " - " + section;
 	}
 	
-	public Date getExamTime() {
+	public Date getExamDate() {
 		return examDate;
 	}
 

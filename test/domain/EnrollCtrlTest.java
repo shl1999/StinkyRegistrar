@@ -29,10 +29,10 @@ public class EnrollCtrlTest {
 		math1 = new Course("4", "MATH1", 3);
 		phys1 = new Course("8", "PHYS1", 3);
 		prog = new Course("7", "PROG", 4);
-		math2 = new Course("6", "MATH2", 3).withPre(math1);
-		phys2 = new Course("9", "PHYS2", 3).withPre(math1, phys1);
-		ap = new Course("2", "AP", 3).withPre(prog);
-		dm = new Course("3", "DM", 3).withPre(prog);
+		math2 = new Course("6", "MATH2", 3).addPrerequisitesList(math1);
+		phys2 = new Course("9", "PHYS2", 3).addPrerequisitesList(math1, phys1);
+		ap = new Course("2", "AP", 3).addPrerequisitesList(prog);
+		dm = new Course("3", "DM", 3).addPrerequisitesList(prog);
 		economy = new Course("1", "ECO", 3);
 		maaref = new Course("5", "MAAREF", 2);
 		farsi = new Course("12", "FA", 2);
@@ -55,7 +55,7 @@ public class EnrollCtrlTest {
 
 	private boolean hasTaken(Student s, Course...courses) {
 	    Set<Course> coursesTaken = new HashSet<>();
-		for (Student.CourseSection cs : s.getCurrentTerm())
+		for (CourseSection cs : s.getCurrentTerm())
 				coursesTaken.add(cs.course);
 		for (Course course : courses) {
 			if (!coursesTaken.contains(course))

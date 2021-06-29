@@ -7,7 +7,6 @@ public class Course {
 	private String id;
 	private String name;
 	private int units;
-	
 	List<Course> prerequisites;
 
 	public Course(String id, String name, int units) {
@@ -16,12 +15,20 @@ public class Course {
 		this.units = units;
 		prerequisites = new ArrayList<Course>();
 	}
-	
-	public void addPre(Course c) {
-		getPrerequisites().add(c);
+
+	public String getName() {
+		return name;
 	}
 
-	public Course withPre(Course... pres) {
+	public int getUnits() {
+		return units;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public Course addPrerequisitesList(Course... pres) {
 		prerequisites.addAll(Arrays.asList(pres));
 		return this;
 	}
@@ -40,18 +47,6 @@ public class Course {
 		}
 		sb.append("}");
 		return sb.toString();
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public int getUnits() {
-		return units;
-	}
-
-	public String getId() {
-		return id;
 	}
 
 	public boolean equals(Object obj) {
