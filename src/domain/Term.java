@@ -22,14 +22,8 @@ public class Term {
 	public String getName() {
 		return name;
 	}
-	
-	public String toString() {
-		return name;
-	}
 
 	public Date getStartDate() {
 		return startDate;
 	}
-	
-	
 }
