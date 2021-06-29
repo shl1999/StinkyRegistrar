@@ -11,7 +11,7 @@ import domain.exceptions.ExceptionList;
 public class EnrollCtrl {
     private List<EnrollmentRulesViolationException> errors = new ArrayList<>();
 
-    public void enroll(Student s, List<CSE> courses) throws ExceptionList {
+    public void enroll(Student s, List<Offering> courses) throws ExceptionList {
         checkForAlreadyPassedCourses(courses, s.transcript());
         checkForPrerequisiteRequirements(courses, s.transcript());
         checkForDuplicateEnrollRequest(courses);
@@ -22,12 +22,12 @@ public class EnrollCtrl {
             throw new ExceptionList(errors);
         }
 
-        for (CSE o : courses)
+        for (Offering o : courses)
             s.takeCourse(o.getCourse(), o.getSection());
     }
 
-    private void checkForPrerequisiteRequirements(List<CSE> courses, Map<Term, Map<Course, Double>> transcript) {
-        for (CSE o : courses) {
+    private void checkForPrerequisiteRequirements(List<Offering> courses, Map<Term, Map<Course, Double>> transcript) {
+        for (Offering o : courses) {
             List<Course> prereqs = o.getCourse().getPrerequisites();
             nextPre:
             for (Course pre : prereqs) {
@@ -41,8 +41,8 @@ public class EnrollCtrl {
         }
     }
 
-    private void checkForAlreadyPassedCourses(List<CSE> courses, Map<Term, Map<Course, Double>> transcript) {
-        for (CSE o : courses) {
+    private void checkForAlreadyPassedCourses(List<Offering> courses, Map<Term, Map<Course, Double>> transcript) {
+        for (Offering o : courses) {
             for (Iterator<Map.Entry<Term, Map<Course, Double>>> iterator = transcript.entrySet().iterator(); iterator.hasNext(); ) {
                 Map.Entry<Term, Map<Course, Double>> tr = iterator.next();
                 if (hasPassed(tr, o.getCourse())) {
@@ -52,9 +52,9 @@ public class EnrollCtrl {
         }
     }
 
-    private void checkForDuplicateEnrollRequest(List<CSE> courses) {
-        for (CSE o : courses) {
-            for (CSE o2 : courses) {
+    private void checkForDuplicateEnrollRequest(List<Offering> courses) {
+        for (Offering o : courses) {
+            for (Offering o2 : courses) {
                 if (o == o2)
                     continue;
                 if (o.getCourse().equals(o2.getCourse()))
@@ -63,9 +63,9 @@ public class EnrollCtrl {
         }
     }
 
-    private void checkForConfilictingExamTimes(List<CSE> courses) {
-        for (CSE o : courses) {
-            for (CSE o2 : courses) {
+    private void checkForConfilictingExamTimes(List<Offering> courses) {
+        for (Offering o : courses) {
+            for (Offering o2 : courses) {
                 if (o == o2)
                     continue;
                 if (o.getExamDate().equals(o2.getExamDate()))
@@ -74,7 +74,7 @@ public class EnrollCtrl {
         }
     }
 
-    private void checkForGPALimit(List<CSE> courses, Map<Term, Map<Course, Double>> transcript) {
+    private void checkForGPALimit(List<Offering> courses, Map<Term, Map<Course, Double>> transcript) {
         int unitsRequested = courses.stream().mapToInt(o -> o.getCourse().getUnits()).sum();
         if ((Utils.getGpa(transcript) < 12 && unitsRequested > 14) ||
                 (Utils.getGpa(transcript) < 16 && unitsRequested > 16) ||
