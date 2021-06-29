@@ -28,9 +28,9 @@ public class EnrollCtrl {
 
     private void checkForPrerequisiteRequirements(List<Offering> courses, Map<Term, Map<Course, Double>> transcript) {
         for (Offering o : courses) {
-            List<Course> prereqs = o.getCourse().getPrerequisites();
+            List<Course> prerequisites = o.getCourse().getPrerequisites();
             nextPre:
-            for (Course pre : prereqs) {
+            for (Course pre : prerequisites) {
                 for (Map.Entry<Term, Map<Course, Double>> tr : transcript.entrySet()) {
                     if (hasPassed(tr, pre)) {
                         continue nextPre;
@@ -41,35 +41,35 @@ public class EnrollCtrl {
         }
     }
 
-    private void checkForAlreadyPassedCourses(List<Offering> courses, Map<Term, Map<Course, Double>> transcript) {
-        for (Offering o : courses) {
+    private void checkForAlreadyPassedCourses(List<Offering> offerings, Map<Term, Map<Course, Double>> transcript) {
+        for (Offering offering : offerings) {
             for (Iterator<Map.Entry<Term, Map<Course, Double>>> iterator = transcript.entrySet().iterator(); iterator.hasNext(); ) {
                 Map.Entry<Term, Map<Course, Double>> tr = iterator.next();
-                if (hasPassed(tr, o.getCourse())) {
-                    errors.add(new EnrollmentRulesViolationException(String.format("The student has already passed %s", o.getCourse().getName())));
+                if (hasPassed(tr, offering.getCourse())) {
+                    errors.add(new EnrollmentRulesViolationException(String.format("The student has already passed %s", offering.getCourse().getName())));
                 }
             }
         }
     }
 
-    private void checkForDuplicateEnrollRequest(List<Offering> courses) {
-        for (Offering o : courses) {
-            for (Offering o2 : courses) {
-                if (o == o2)
+    private void checkForDuplicateEnrollRequest(List<Offering> offerings) {
+        for (Offering offering : offerings) {
+            for (Offering offering2 : offerings) {
+                if (offering == offering2)
                     continue;
-                if (o.getCourse().equals(o2.getCourse()))
-                    errors.add(new EnrollmentRulesViolationException(String.format("%s is requested to be taken twice", o.getCourse().getName())));
+                if (offering.getCourse().equals(offering2.getCourse()))
+                    errors.add(new EnrollmentRulesViolationException(String.format("%s is requested to be taken twice", offering.getCourse().getName())));
             }
         }
     }
 
-    private void checkForConfilictingExamTimes(List<Offering> courses) {
-        for (Offering o : courses) {
-            for (Offering o2 : courses) {
-                if (o == o2)
+    private void checkForConfilictingExamTimes(List<Offering> offerings) {
+        for (Offering offering : offerings) {
+            for (Offering offering2 : offerings) {
+                if (offering == offering2)
                     continue;
-                if (o.getExamDate().equals(o2.getExamDate()))
-                    errors.add(new EnrollmentRulesViolationException(String.format("Two offerings %s and %s have the same exam time", o, o2)));
+                if (offering.getExamDate().equals(offering2.getExamDate()))
+                    errors.add(new EnrollmentRulesViolationException(String.format("Two offerings %s and %s have the same exam time", offering, offering2)));
             }
         }
     }
